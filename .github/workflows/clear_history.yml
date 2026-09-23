@@ -1,0 +1,23 @@
+name: Clear Commit History
+on:
+  workflow_dispatch: # Позволяет запустить процесс вручную кнопкой
+
+jobs:
+  clear-history:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Reinitialise Git and Force Push
+        run: |
+          git config --global user.name "GitHub Action"
+          git config --global user.email "action@github.com"
+          git checkout --orphan temp_branch
+          git add -A
+          git commit -m "Initial commit (History cleared)"
+          git branch -D main || git branch -D master
+          git branch -m main
+          git push origin main --force
